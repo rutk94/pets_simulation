@@ -4,6 +4,7 @@ from pet import Pet
 
 coords_path: Path = Path.cwd() / 'coordinates'
 pets: list = ['cats_casual', 'cats_lazy', 'cats_pussies', 'mice']
+iterations: int = 5
 
 
 def create_objects(name: str, **kwargs) -> list:
@@ -16,11 +17,14 @@ def create_objects(name: str, **kwargs) -> list:
 
     result: list = []
     with open(coords_path / f'{name}.txt', 'r') as file:
+        nr: int = 0
         for line in file:
+            nr += 1
             coords: list = line.strip().split(' ')
             pet_object: Pet = Pet(
-                    start_x=coords[0],
-                    start_y=coords[1],
+                    name=f'{name}_{nr}',
+                    start_x=int(coords[0]),
+                    start_y=int(coords[1]),
                     **kwargs
                 )
             result.append(pet_object)
@@ -56,6 +60,38 @@ def main():
         color='blue',
         max_move=1,
     )
+
+    all_pets: list = cats_casual + cats_lazy + cats_pussies + mice
+
+    # create pandas.DataFrame
+
+
+    # simulation algorithm
+    # for i in range(iterations):
+    #     # moves
+    #     for m in range(len(mice)):
+    #         mice[m].move()
+    #
+    #     for cc in range(len(cats_casual)):
+    #         cats_casual[cc].move()
+    #
+    #     for cl in range(len(cats_lazy)):
+    #         cats_lazy[cl].move()
+    #
+    #     for cp in range(len(cats_pussies)):
+    #         cats_pussies[cp].move()
+
+        # check positions
+
+
+        # if cat meets mouse
+
+
+    # print(mice[0].all_coords, mice[0].curr_x, mice[0].curr_y)
+    # mice[0].move()
+    # print(mice[0].all_coords, mice[0].curr_x, mice[0].curr_y)
+
+    print(mice[0].name)
 
 
 if __name__ == '__main__':

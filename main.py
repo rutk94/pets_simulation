@@ -11,7 +11,7 @@ range_x: tuple[int, int] = (0, 100)
 range_y: tuple[int, int] = (0, 100)
 
 
-def create_objects(name: str, **kwargs) -> list:
+def _create_objects(name: str, **kwargs) -> list:
     """
     Creates list of objects from class Pet by opening files with starting coordinates.
     :param name: pet name
@@ -36,19 +36,52 @@ def create_objects(name: str, **kwargs) -> list:
     return result
 
 
-def check_positions(pos: pd.DataFrame) -> pd.DataFrame:
+def _actions(pos_df: pd.DataFrame,
+             # pet: Pet,
+             all_pets: list[Pet]
+             ) -> pd.DataFrame:
     """
-    Checking if actual positions of pets causes action.
-    :param pos: actual positions of pets as a row of pandas.DataFrame
-    :return: posirions of pets after actions as a row of pandas.DataFrame
+    Checking if actual positions of pets causes any action.
+    If yes, actualize positions.
+    :param pos_df: actual positions of pets as a row of pandas.DataFrame
+    # :param pet: single Pet object to check
+    :param all_pets: all Pet objects
+    :return: positions of pets after actions as a row of pandas.DataFrame
     """
-    pass
+    new_pos_df: pd.DataFrame = pos_df.copy()
+
+    for i in range(len(pos_df.columns)):
+        if pets[3] not in all_pets[i].name:     # pets[3] = 'mice'
+            continue
+
+        for j in range(len(pos_df.columns)):
+            if pets[3] in all_pets[j].name:     # pets[3] = 'mice'
+                continue
+
+            else:
+                # mice position
+                mouse_x = pos_df.iloc[0, i].split(';')[0]
+                mouse_y = pos_df.iloc[0, i].split(';')[1]
+
+                # cat position
+                cat_x = pos_df.iloc[0, j].split(';')[0]
+                cat_y = pos_df.iloc[0, j].split(';')[1]
+
+                # action
+                if abs(mouse_x - cat_x) <= 4 or abs(mouse_y - cat_y) <= 4:
+                    pass
+
+                # no action
+                else:
+                    continue
+
+    return new_pos_df
 
 
 def main():
 
     # create lists of Pet objects
-    cats_casual: list = create_objects(
+    cats_casual: list = _create_objects(
         name=pets[0],
         color='yellow',
         max_move=10,
@@ -56,7 +89,7 @@ def main():
         range_y=range_y
     )
 
-    cats_lazy: list = create_objects(
+    cats_lazy: list = _create_objects(
         name=pets[1],
         color='red',
         max_move=10,
@@ -65,7 +98,7 @@ def main():
         range_y=range_y
     )
 
-    cats_pussies: list = create_objects(
+    cats_pussies: list = _create_objects(
         name=pets[2],
         color='orange',
         max_move=5,
@@ -74,7 +107,7 @@ def main():
         range_y=range_y
     )
 
-    mice: list = create_objects(
+    mice: list = _create_objects(
         name=pets[3],
         color='blue',
         max_move=1,
@@ -93,9 +126,15 @@ def main():
 
     # simulation algorythm
     for i in range(iterations):
+
+        # all pets moving - one by one
         for single_pet in all_pets:
             single_pet.move()
             df.loc[i, single_pet.name] = f'{single_pet.curr_x};{single_pet.curr_y}'
+
+            # actions caused by one move
+            if pets[3] in single_pet.name:  # pets[3] = 'mice'
+                df.iloc[-1] = _actions(pos_df=df.iloc[-1], all_pets=all_pets)
 
         # new position checking algorythm
 

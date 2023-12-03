@@ -13,7 +13,6 @@ class Pet:
                  max_move: int,
                  max_dist: int | None = None,
                  counter: bool = False
-
                  ) -> None:
         self.name: str = name
         self.color: str = color

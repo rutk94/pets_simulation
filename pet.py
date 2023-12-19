@@ -8,20 +8,22 @@ class Pet:
                  color: str,
                  start_x: int,
                  start_y: int,
-                 range_x: tuple[int, int],
-                 range_y: tuple[int, int],
+                 range_x: list[int, int],
+                 range_y: list[int, int],
                  max_move: int,
                  max_dist: int | None = None,
+                 courage_dist: int | None = None,
                  counter: bool = False
                  ) -> None:
         self.name: str = name
         self.color: str = color
         self.start_x: int = start_x
         self.start_y: int = start_y
-        self.range_x: tuple[int, int] = range_x
-        self.range_y: tuple[int, int] = range_y
+        self.range_x: list[int, int] = range_x
+        self.range_y: list[int, int] = range_y
         self.max_move: int = max_move
         self.max_dist: int = max_dist
+        self.courage_dist: int = courage_dist
         self.counter: bool = counter
 
         self.all_coords: list[tuple[int, int]] = [(self.start_x, self.start_y)]
@@ -29,6 +31,13 @@ class Pet:
         self.curr_y: int = self.all_coords[-1][1]
 
         self.n: int | None = 0 if self.counter is True else None
+
+        if self.max_dist is not None:
+            if self.start_x + self.max_dist < self.range_x[1]:
+                self.range_x[1] = self.start_x + self.max_dist
+
+            if self.start_y + self.max_dist < self.range_y[1]:
+                self.range_y[1] = self.start_y + self.max_dist
 
     def move(self) -> None:
         while True:

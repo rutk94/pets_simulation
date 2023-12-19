@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 import datetime
 import logging
+import matplotlib.pyplot as plt
 from pathlib import Path
 
 from pet import Pet
@@ -174,6 +175,7 @@ def main():
     )
     df.reset_index(inplace=True)
 
+
     # simulation algorythm
     for i in range(1, iterations):
         logging.info(f'Day: {i}')
@@ -190,6 +192,20 @@ def main():
                                   )
         new_last_row = _actions(pos_df=last_row, all_pets=all_pets)
         df.iloc[i] = new_last_row.iloc[0]
+
+    # create plot
+    plt.grid()
+    plt.ylim(range_x[0] - 10, range_x[1] + 10)
+    plt.xlim(range_y[0] - 10, range_y[1] + 10)
+    for single_pet in all_pets:
+        x: int = single_pet.start_x
+        y: int = single_pet.start_y
+        c: int = single_pet.color
+        plt.scatter(x, y, c=c)
+
+    plt.show()
+
+    print()
 
 
 if __name__ == '__main__':
